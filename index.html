@@ -383,6 +383,7 @@
 
   <footer class="info-footer">
     202 specimens &middot; Part of <a href="https://neorgon.com/">Neorgon</a>
+    &middot; <a href="https://github.com/energon-a-secas/emojis-site/issues/new?template=new-emoji.yml" target="_blank" rel="noopener noreferrer">Submit an emoji</a>
   </footer>
 
   <div id="toast"></div>
@@ -696,14 +697,26 @@
     }
 
     /* ── Copy to clipboard ───────────────────────────────────────────── */
+    // ClipboardItem only accepts image/png — so we draw every source format
+    // (png, jpg) onto a canvas and export as PNG before writing to clipboard.
     async function copyEmoji(path, ext) {
       if (ext === 'gif') {
         showToast("GIFs can't be clipboard-copied — use Download");
         return;
       }
       try {
-        const blob = await fetch(path).then(r => r.blob());
-        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+        const img = await new Promise((resolve, reject) => {
+          const i = new Image();
+          i.onload = () => resolve(i);
+          i.onerror = reject;
+          i.src = path;
+        });
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
         showToast('Copied to clipboard');
       } catch (err) {
         showToast('Copy failed — try Download instead');

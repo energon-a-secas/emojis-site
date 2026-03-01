@@ -1,0 +1,56 @@
+name: Submit an Emoji
+description: Propose a new emoji for the archive. A maintainer will review and add approved submissions.
+title: "[Emoji] "
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Fill in the fields below — a maintainer will review your submission.
+
+        **How to attach your image:** After submitting, edit the issue and drag-and-drop your image file
+        into the text area. GitHub will upload it and give you a URL to paste into the Image URL field above.
+
+  - type: input
+    id: name
+    attributes:
+      label: Emoji name
+      description: The slug used to reference this emoji in Slack — lowercase, no spaces, use underscores or hyphens.
+      placeholder: "partyparrot"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Choose the most appropriate category for this emoji.
+      options:
+        - argentina
+        - chile
+        - development
+        - essentials
+        - logos
+        - parrots
+        - think
+        - other
+    validations:
+      required: true
+
+  - type: input
+    id: image_url
+    attributes:
+      label: Image URL
+      description: >
+        Direct link to the image file (PNG, JPG, or GIF).
+        You can attach the file by dragging it into this issue's comment box — GitHub will give you a URL to paste here.
+      placeholder: "https://user-images.githubusercontent.com/..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context (optional)
+      description: Where is this emoji from? What does it mean? Any fun background to share.
+      placeholder: "Classic Chilean meme from..."
