@@ -70,7 +70,7 @@
       align-items: center;
     }
 
-    .header-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .header-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; color: inherit; }
 
     .header-logo-img {
       height: 36px; width: auto; flex-shrink: 0;
@@ -83,9 +83,18 @@
     .header-logo h1 { font-size: 1.2em; font-weight: 600; color: #f9f9f9; letter-spacing: .5px; }
     .header-subtitle { font-size: .82em; color: rgba(255,255,255,.72); font-weight: 500; margin-top: 3px; font-family: var(--font-mono); }
 
+    nav { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+    .nav-link {
+      font-size: .8rem; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; padding: 5px 12px; border-radius: 20px;
+      border: 1px solid transparent;
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    .nav-link:hover { color: var(--text-primary); border-color: rgba(56,189,248,.25); background: rgba(56,189,248,.07); }
+
     .header-home {
       display: flex; align-items: center;
-      margin-left: auto;
+      margin-left: 4px;
       padding: 5px;
       color: rgba(255,255,255,0.9); text-decoration: none;
       border-radius: var(--radius-sm);
@@ -350,20 +359,21 @@
 <body>
 
   <div class="header-bar">
-    <div class="header-logo">
-      <a href="https://neorgon.com/" target="_blank" rel="noopener noreferrer">
-        <img src="energon-classic-logo.png" class="header-logo-img" alt="Neorgon">
-      </a>
+    <a class="header-logo" href="https://emojis.neorgon.com/">
+      <img src="energon-classic-logo.png" class="header-logo-img" alt="Neorgon">
       <div>
         <h1>Emoji Archive</h1>
         <div class="header-subtitle">202 preserved specimens</div>
       </div>
-    </div>
-    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" target="_blank" rel="noopener noreferrer">
-      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-      </svg>
     </a>
+    <nav>
+      <a class="nav-link" href="https://github.com/energon-a-secas/emojis-site/issues/new?template=new-emoji.yml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border-color:rgba(56,189,248,.2)">Submit</a>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+      </a>
+    </nav>
   </div>
 
   <div class="container">
@@ -382,8 +392,10 @@
   </div>
 
   <footer class="info-footer">
-    202 specimens &middot; Part of <a href="https://neorgon.com/">Neorgon</a>
-    &middot; <a href="https://github.com/energon-a-secas/emojis-site/issues/new?template=new-emoji.yml" target="_blank" rel="noopener noreferrer">Submit an emoji</a>
+    Emoji Archive &middot;
+    <a href="https://neorgon.com/">neorgon.com</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://github.com/energon-a-secas/emojis-site" target="_blank" rel="noopener noreferrer">GitHub</a>
   </footer>
 
   <div id="toast"></div>
