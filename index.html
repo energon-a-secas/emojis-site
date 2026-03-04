@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emoji Archive — Neorgon</title>
+  <title>Emoji Archive | Neorgon</title>
+  <meta name="description" content="Browse and download 202 custom Slack emojis, from party parrots to dev logos">
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <style>
 
     /* ── Reset & base ─────────────────────────────────────────────────── */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     /*
      * ── Design tokens (arctic overlay) ────────────────────────────────
@@ -21,7 +22,7 @@
      *  surface-1 (cards):  rgba(255,255,255,.03)
      *  surface-2 (hover):  rgba(56,189,248,.04)
      *  border:             rgba(56,189,248,0.09) / .3 on hover
-     *  text muted:         rgba(255,255,255,.45)
+     *  text muted:         rgba(255,255,255,.55)
      *  header gradient:    135deg, #0369a1 0%, #0c1a2e 45%, #050c14 100%
      *  font-mono:          "SF Mono", "Fira Code", monospace
      */
@@ -34,7 +35,7 @@
       --card-border: rgba(56,189,248,.09);
       --text-primary: #f9f9f9;
       --text-secondary: #cacaca;
-      --text-muted: rgba(255,255,255,.45);
+      --text-muted: rgba(255,255,255,.55);
       --accent: #38bdf8;
       --accent-dim: rgba(56,189,248,.12);
       --font: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -58,7 +59,7 @@
 
     /* ── Header ───────────────────────────────────────────────────────── */
     .header-bar {
-      background: linear-gradient(135deg, #0369a1 0%, #0c1a2e 45%, #050c14 100%);
+      background: linear-gradient(in oklch 135deg, #0369a1 0%, #0c1a2e 50%, #050c14 100%);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,.07);
       padding: 0 24px;
@@ -464,12 +465,28 @@
       .header-logo h1 { font-size: 1rem; }
       .header-subtitle { display: none; }
     }
+    :focus-visible {
+      outline: 2px solid var(--accent-bright, #0080ff);
+      outline-offset: 2px;
+    }
+    .skip-link {
+      position: absolute; top: -100%; left: 16px; z-index: 1000;
+      padding: 8px 16px; background: var(--accent-bright, #0080ff); color: #000;
+      font-weight: 600; font-size: .875rem; border-radius: 0 0 6px 6px;
+      text-decoration: none; transition: top .2s;
+    }
+    .skip-link:focus { top: 0; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
   </style>
 </head>
 <body>
 
-  <div class="header-bar">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar">
     <a class="header-logo" href="https://emojis.neorgon.com/">
       <img src="energon-classic-logo.png" class="header-logo-img" alt="Neorgon">
       <div>
@@ -479,15 +496,15 @@
     </a>
     <nav>
       <button class="nav-link" id="uploadToggle" style="color:var(--accent);border-color:rgba(56,189,248,.2)">Upload</button>
-      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" target="_blank" rel="noopener noreferrer">
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" target="_blank" rel="noopener noreferrer" aria-label="Neorgon home">
         <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
         </svg>
       </a>
     </nav>
-  </div>
+  </header>
 
-  <div class="container">
+  <main class="container" id="main">
 
     <!-- Upload panel -->
     <div class="upload-panel" id="uploadPanel">
@@ -537,7 +554,7 @@
     <div class="result-info" id="resultInfo"></div>
     <div class="emoji-grid" id="emojiGrid"></div>
 
-  </div>
+  </main>
 
   <footer class="info-footer">
     Emoji Archive &middot;
@@ -841,7 +858,7 @@
       if (emojis.length === 0) {
         const el = document.createElement('div');
         el.className = 'empty-state';
-        el.textContent = '// no specimens match';
+        el.textContent = '// try a different search';
         grid.appendChild(el);
       } else {
         const frag = document.createDocumentFragment();
@@ -903,7 +920,7 @@
     /* ── Copy to clipboard ───────────────────────────────────────────── */
     async function copyEmoji(path, ext, isCrossOrigin) {
       if (ext === 'gif') {
-        showToast("GIFs can't be clipboard-copied — use Download");
+        showToast("GIFs can't be clipboard-copied. Use Download instead");
         return;
       }
       try {
@@ -922,7 +939,7 @@
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
         showToast('Copied to clipboard');
       } catch (err) {
-        showToast('Copy failed — try Download instead');
+        showToast('Copy failed. Try Download instead');
       }
     }
 
@@ -996,7 +1013,7 @@
           showToast('Wrong password');
         }
       } catch (e) {
-        showToast('Auth error — check Convex config');
+        showToast('Auth error. Check Convex config');
       }
       pwSubmit.disabled = false;
       pwSubmit.textContent = 'Unlock';
@@ -1048,7 +1065,7 @@
     uploadSubmit.addEventListener('click', async () => {
       if (!selectedFile) { showToast('No file selected'); return; }
       const name = emojiNameInput.value.trim();
-      if (!name) { showToast('Name is required'); return; }
+      if (!name) { showToast('Add a name first'); return; }
 
       uploadSubmit.disabled = true;
       uploadSubmit.textContent = 'Uploading…';
@@ -1086,7 +1103,7 @@
         // Refresh gallery
         await loadConvexEmojis();
       } catch (e) {
-        showToast('Upload failed — ' + e.message);
+        showToast('Upload failed: ' + e.message);
       }
 
       uploadSubmit.disabled = false;
