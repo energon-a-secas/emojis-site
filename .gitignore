@@ -18,3 +18,7 @@ example.txt
 # ── Secrets — never commit ────────────────────────────────────────────────────
 .env
 .env.*
+
+# ── Prevent deployment of dev files ──────────────────────────────────────────
+package.json
+.claudeignore
