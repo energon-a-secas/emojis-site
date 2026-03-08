@@ -43,6 +43,8 @@ A searchable, browsable catalog of 202 Slack emojis across 7 categories: argenti
 
 ## Architecture
 
+![Architecture](docs/architecture.svg)
+
 Modular ES module app: `index.html` shell + `css/style.css` + `js/*.js`.
 
 ```

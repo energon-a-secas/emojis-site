@@ -1,7 +1,28 @@
 // ── DOM rendering ────────────────────────────────────────────────────
-import { CATEGORIES } from './data.js';
+import { CATEGORIES, EMOJIS } from './data.js';
 import { state, getAllEmojis } from './state.js';
-import { copyEmoji, downloadEmoji } from './utils.js';
+import { copyEmoji, downloadEmoji, showToast } from './utils.js';
+
+// ── Emoji of the Day ────────────────────────────────────────────────
+function getDayIndex(total) {
+  const d = new Date();
+  const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  return ((seed * 2654435761) >>> 0) % total;
+}
+
+export function renderEmojiOfTheDay() {
+  if (EMOJIS.length === 0) return;
+  const emoji = EMOJIS[getDayIndex(EMOJIS.length)];
+  const banner = document.getElementById('eotdBanner');
+  if (!banner) return;
+  document.getElementById('eotdImg').src = emoji.path;
+  document.getElementById('eotdImg').alt = emoji.name;
+  document.getElementById('eotdName').textContent = `:${emoji.name}:`;
+  banner.style.display = 'flex';
+  document.getElementById('eotdCopy').addEventListener('click', () => {
+    navigator.clipboard.writeText(`:${emoji.name}:`).then(() => showToast('Copied :' + emoji.name + ':'));
+  });
+}
 
 // ── SVG icon templates ───────────────────────────────────────────────
 const COPY_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;

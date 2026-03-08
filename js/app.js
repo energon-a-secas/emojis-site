@@ -2,7 +2,7 @@
 // Imports all modules to wire up the application.
 // No logic beyond initialisation lives here.
 
-import { rebuildChips, filterGrid } from './render.js';
+import { rebuildChips, filterGrid, renderEmojiOfTheDay } from './render.js';
 import { loadConvexEmojis } from './events.js';
 
 // events.js self-registers all DOM listeners on import,
@@ -10,4 +10,5 @@ import { loadConvexEmojis } from './events.js';
 
 rebuildChips();
 filterGrid();
+renderEmojiOfTheDay();
 loadConvexEmojis();
