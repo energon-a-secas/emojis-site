@@ -22,3 +22,6 @@ example.txt
 # ── Prevent deployment of dev files ──────────────────────────────────────────
 package.json
 .claudeignore
+
+# Claude AI guidance (maintained centrally in .claude/project-claudes/)
+CLAUDE.md
