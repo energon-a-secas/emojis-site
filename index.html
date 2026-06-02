@@ -102,7 +102,8 @@
       align-items: center;
     }
 
-    .header-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; color: inherit; }
+    .header-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .header-title-link { text-decoration: none; color: inherit; }
 
     .header-logo-img {
       height: 36px; width: auto; flex-shrink: 0;
@@ -583,14 +584,16 @@
 
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <div class="header-bar">
-    <a class="header-logo" href="https://emojis.neorgon.com/">
-      <img src="energon-classic-logo.png" class="header-logo-img" alt="Neorgon">
-      <div>
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://neorgon.com/" target="_blank" rel="noopener noreferrer">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="Neorgon">
+      </a>
+      <a href="./" class="header-title-link">
         <h1>Emoji Archive</h1>
         <div class="header-subtitle">202 preserved specimens</div>
-      </div>
-    </a>
+      </a>
+    </div>
     <nav>
       <button class="nav-link" id="uploadToggle" style="color:var(--accent);border-color:rgba(56,189,248,.2);background:none;cursor:pointer;font:inherit">Upload</button>
       <a class="nav-link" href="https://github.com/energon-a-secas/emojis-site/issues/new?template=new-emoji.yml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border-color:rgba(56,189,248,.2)">Submit</a>
@@ -600,9 +603,9 @@
         </svg>
       </a>
     </nav>
-  </div>
+  </header>
 
-  <div class="container" id="main">
+  <main class="container" id="main">
 
     <!-- Upload panel -->
     <div class="upload-panel" id="uploadPanel">
@@ -665,11 +668,10 @@
     <div class="result-info" id="resultInfo"></div>
     <div class="emoji-grid" id="emojiGrid"></div>
 
-  </div>
+  </main>
 
   <footer class="info-footer">
-    Emoji Archive &middot;
-    <a href="https://neorgon.com/">neorgon.com</a>
+    Part of <a class="footer-link" href="https://neorgon.com/">Neorgon</a>
     &nbsp;&middot;&nbsp;
     <a href="https://github.com/energon-a-secas/emojis-site" target="_blank" rel="noopener noreferrer">GitHub</a>
   </footer>
@@ -1244,6 +1246,5 @@
     filterGrid();
     loadConvexEmojis();
   </script>
-
 </body>
 </html>
