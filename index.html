@@ -103,35 +103,17 @@
       flex-direction: column;
     }
 
-    /* ── Header ───────────────────────────────────────────────────────── */
-    .header-bar {
-      background: linear-gradient(135deg, #0369a1 0%, #0c1a2e 45%, #050c14 100%);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      padding: 0 24px;
-      height: 68px;
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      display: flex;
-      align-items: center;
+    /* ── Header — layout owned by the Neorgon Header Kit.
+       Site keeps its blue dialect via kit token overrides;
+       scoped so a visitor-chosen theme (data-theme) still wins. ── */
+    html:not([data-theme]) .header-bar {
+      --header-bg-start: #0369a1;
+      --header-bg-mid: #0c1a2e;
+      --header-bg-end: #050c14;
+      --header-bg: linear-gradient(135deg, var(--header-bg-start) 0%, var(--header-bg-mid) 45%, var(--header-bg-end) 100%);
     }
+    .header-subtitle { font-family: var(--font-mono); }
 
-    .header-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .header-title-link { text-decoration: none; color: inherit; }
-
-    .header-logo-img {
-      height: 36px; width: auto; flex-shrink: 0;
-      filter: brightness(0) invert(1);
-      transition: transform 0.3s var(--ease-snap);
-      display: block;
-    }
-    .header-logo-img:hover { transform: scale(1.14) rotate(-9deg); }
-
-    .header-logo h1 { font-size: 1.2em; font-weight: 600; color: #f9f9f9; letter-spacing: .5px; }
-    .header-subtitle { font-size: .82em; color: rgba(255,255,255,.72); font-weight: 500; margin-top: 3px; font-family: var(--font-mono); }
-
-    nav { display: flex; align-items: center; gap: 6px; margin-left: auto; }
     .nav-link {
       font-size: .8rem; font-weight: 500; color: var(--text-secondary);
       text-decoration: none; padding: 5px 12px; border-radius: 20px;
@@ -139,17 +121,6 @@
       transition: color .2s, border-color .2s, background .2s;
     }
     .nav-link:hover { color: var(--text-primary); border-color: rgba(56,189,248,.25); background: rgba(56,189,248,.07); }
-
-    .header-home {
-      display: flex; align-items: center;
-      margin-left: 4px;
-      padding: 5px;
-      color: rgba(255,255,255,0.9); text-decoration: none;
-      border-radius: var(--radius-sm);
-      transition: color .2s, background .2s; flex-shrink: 0;
-    }
-    .header-home:hover { color: #fff; background: rgba(255,255,255,0.12); }
-    .header-home svg { width: 34px; height: 34px; display: block; }
 
     /* ── Main container ──────────────────────────────────────────────── */
     .container {
@@ -604,12 +575,18 @@
     }
 
   </style>
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
 </head>
 <body>
 
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="header-bar">
+  <header class="header-bar" data-header-mode="app">
     <div class="header-logo">
       <a href="https://neorgon.com/" target="_blank" rel="noopener noreferrer">
         <img src="energon-classic-logo.png" class="header-logo-img" alt="Neorgon">
@@ -619,15 +596,18 @@
         <div class="header-subtitle">202 preserved specimens</div>
       </a>
     </div>
-    <nav>
-      <button class="nav-link" id="uploadToggle" style="color:var(--accent);border-color:rgba(56,189,248,.2);background:none;cursor:pointer;font:inherit">Upload</button>
-      <a class="nav-link" href="https://github.com/energon-a-secas/emojis-site/issues/new?template=new-emoji.yml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border-color:rgba(56,189,248,.2)">Submit</a>
+    <div class="header-right">
+      <nav class="header-actions">
+        <button data-keep-mobile class="nav-link" id="uploadToggle" style="color:var(--accent);border-color:rgba(56,189,248,.2);background:none;cursor:pointer;font:inherit">Upload</button>
+        <a class="nav-link" href="https://github.com/energon-a-secas/emojis-site/issues/new?template=new-emoji.yml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border-color:rgba(56,189,248,.2)">Submit</a>
+    
+      </nav>
       <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-        </svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
       </a>
-    </nav>
+    </div>
   </header>
 
   <main class="container" id="main">

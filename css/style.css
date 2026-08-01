@@ -47,34 +47,7 @@ body {
   flex-direction: column;
 }
 
-/* ── Header ───────────────────────────────────────────────────────── */
-.header-bar {
-  background: linear-gradient(in oklch 135deg, #0369a1 0%, #0c1a2e 50%, #050c14 100%);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255,255,255,.07);
-  padding: 0 24px;
-  height: 68px;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-}
-
-.header-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; color: inherit; }
-
-.header-logo-img {
-  height: 36px; width: auto; flex-shrink: 0;
-  filter: brightness(0) invert(1);
-  transition: transform 0.3s var(--ease-snap);
-  display: block;
-}
-.header-logo-img:hover { transform: scale(1.14) rotate(-9deg); }
-
-.header-logo h1 { font-size: 1.2em; font-weight: 600; color: #f9f9f9; letter-spacing: .5px; }
-.header-subtitle { font-size: .82em; color: rgba(255,255,255,.72); font-weight: 500; margin-top: 3px; font-family: var(--font-mono); }
-
-nav { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+nav { display: flex; align-items: center; gap: 6px; }
 .nav-link {
   font-size: .8rem; font-weight: 500; color: var(--text-secondary);
   text-decoration: none; padding: 5px 12px; border-radius: 20px;
@@ -83,17 +56,6 @@ nav { display: flex; align-items: center; gap: 6px; margin-left: auto; }
   transition: color .2s, border-color .2s, background .2s;
 }
 .nav-link:hover { color: var(--text-primary); border-color: rgba(56,189,248,.25); background: rgba(56,189,248,.07); }
-
-.header-home {
-  display: flex; align-items: center;
-  margin-left: 4px;
-  padding: 5px;
-  color: rgba(255,255,255,0.9); text-decoration: none;
-  border-radius: var(--radius-sm);
-  transition: color .2s, background .2s; flex-shrink: 0;
-}
-.header-home:hover { color: #fff; background: rgba(255,255,255,0.12); }
-.header-home svg { width: 34px; height: 34px; display: block; }
 
 /* ── Main container ──────────────────────────────────────────────── */
 .container {
@@ -532,8 +494,6 @@ nav { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 @media (max-width: 600px) {
   .container { padding: 20px 16px; }
   .emoji-grid { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
-  .header-logo h1 { font-size: 1rem; }
-  .header-subtitle { display: none; }
   .eotd-cta { display: none; }
 }
 :focus-visible {
@@ -572,9 +532,6 @@ button:active, .btn:active {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
-
-/* ── Template alignment (header title link + footer) ── */
-.header-title-link { text-decoration: none; color: inherit; }
 .info-footer {
   text-align: center;
   padding: 24px 24px 28px;
