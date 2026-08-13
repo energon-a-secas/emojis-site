@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-Frame-Options" content="DENY">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' esm.sh; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.neorgon.org; connect-src 'self' *.convex.cloud; frame-ancestors 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' esm.sh; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org; img-src 'self' data: blob: https://cdn.neorgon.org; connect-src 'self' *.convex.cloud">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -462,18 +461,6 @@
     }
 
     /* ── Footer ───────────────────────────────────────────────────────── */
-    .info-footer {
-      text-align: center;
-      padding: 20px 24px 28px;
-      color: rgba(255,255,255,.22);
-      font-size: .78em;
-      line-height: 1.8;
-      border-top: 1px solid rgba(255,255,255,.05);
-      margin-top: 32px;
-      font-family: var(--font-mono);
-    }
-    .info-footer a { color: rgba(56,189,248,.55); text-decoration: none; }
-    .info-footer a:hover { color: var(--accent); }
 
     /* ── Emoji of the Day ──────────────────────────────────────────── */
     .eotd-banner {
@@ -581,6 +568,8 @@
   <link rel="stylesheet" href="css/neorgon-themes.css">
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
   <script defer src="js/neorgon-header.js"></script>
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
 </head>
 <body>
 
@@ -675,10 +664,8 @@
 
   </main>
 
-  <footer class="info-footer">
-    Part of <a class="footer-link" href="https://neorgon.com/">Neorgon</a>
-    &nbsp;&middot;&nbsp;
-    <a href="https://github.com/energon-a-secas/emojis-site" target="_blank" rel="noopener noreferrer">GitHub</a>
+  <footer class="neo-footer" data-footer-mode="minimal">
+    &nbsp;&middot;&nbsp; GitHub
   </footer>
 
   <div id="toast"></div>
