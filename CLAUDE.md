@@ -19,25 +19,25 @@ make login      # Authenticate with Convex (npx convex login)
 Single-file app (`index.html`) with all CSS and JS embedded inline. No build step.
 
 **Two data sources, merged at runtime:**
-1. **Hardcoded `EMOJIS` array** (202 entries) — emoji objects with `{ name, category, path, ext, id }` where `path` is a relative `emojis/<category>/<file>` URL served from the local filesystem.
-2. **Convex backend** (`convex/`) — dynamically uploaded emojis fetched via `ConvexHttpClient` on page load. Stored in Convex file storage; objects have the same shape but `path` is a Convex CDN URL and carry `isNew: true`.
+1. **Hardcoded `EMOJIS` array** (202 entries): emoji objects with `{ name, category, path, ext, id }` where `path` is a relative `emojis/<category>/<file>` URL served from the local filesystem.
+2. **Convex backend** (`convex/`): dynamically uploaded emojis fetched via `ConvexHttpClient` on page load. Stored in Convex file storage; objects have the same shape but `path` is a Convex CDN URL and carry `isNew: true`.
 
 `getAllEmojis()` merges both arrays. Convex emojis append after hardcoded ones with sequential IDs.
 
 **Convex backend** (`convex/`):
-- `schema.ts` — `emojis` table: `{ name, category, ext, storageId }`
-- `emojis.ts` — `list` query (returns URLs from storage), `getUploadUrl` + `saveEmoji` mutations
-- `auth.ts` — `checkPassword` action (reads `UPLOAD_PASSWORD` env var)
+- `schema.ts`: `emojis` table: `{ name, category, ext, storageId }`
+- `emojis.ts`: `list` query (returns URLs from storage), `getUploadUrl` + `saveEmoji` mutations
+- `auth.ts`: `checkPassword` action (reads `UPLOAD_PASSWORD` env var)
 
 **Upload flow:** password gate → `auth:checkPassword` action → sessionStorage flag → drag-and-drop file → `getUploadUrl` mutation → `fetch` POST to Convex storage → `saveEmoji` mutation → reload grid.
 
 **Key JS functions in `index.html`:**
-- `getAllEmojis()` — merges hardcoded + Convex emojis
-- `filterGrid()` — applies active category + search query, calls `renderGrid()`
-- `rebuildChips()` — builds category filter buttons from merged emoji set
-- `loadConvexEmojis()` — fetches from Convex, silently falls back if unconfigured
-- `copyEmoji()` — Canvas-based clipboard copy (GIFs unsupported, skips to toast)
-- `makeCard(e)` — builds emoji card DOM element with overlay buttons
+- `getAllEmojis()`: merges hardcoded + Convex emojis
+- `filterGrid()`: applies active category + search query, calls `renderGrid()`
+- `rebuildChips()`: builds category filter buttons from merged emoji set
+- `loadConvexEmojis()`: fetches from Convex, silently falls back if unconfigured
+- `copyEmoji()`: Canvas-based clipboard copy (GIFs unsupported, skips to toast)
+- `makeCard(e)`: builds emoji card DOM element with overlay buttons
 
 **Emoji categories:** `argentina`, `chile`, `development`, `essentials`, `logos`, `parrots`, `think`, `uncategorized`
 
