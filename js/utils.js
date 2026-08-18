@@ -4,6 +4,10 @@
 let toastTimer;
 export function showToast(msg) {
   const t = document.getElementById('toast');
+  // Announced by screen readers. Without these the toast is
+  // invisible to anyone not looking at that corner of the screen.
+  t.setAttribute('role', 'status');
+  t.setAttribute('aria-live', 'polite');
   t.textContent = msg;
   t.classList.add('visible');
   clearTimeout(toastTimer);
