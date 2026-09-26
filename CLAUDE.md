@@ -55,6 +55,8 @@ Single-file app (`index.html`) with all CSS and JS embedded inline. No build ste
 
 Inline `on*=` attributes, in HTML or in JS strings, are refused by the policy: use `addEventListener`. `frame-ancestors` and `X-Content-Type-Options` do nothing in a meta tag, which is why neither is here.
 
+`_config.yml` keeps every Markdown file out of the Pages build. Without it, Jekyll published this file as `/CLAUDE.html`, a page with the default theme's scripts and no CSP on the same origin. Keep the file when editing the site, and give any new `.html` page its own policy.
+
 ## Adding Emojis
 
 **Static (hardcoded):** Place the file in `emojis/<category>/`, add an entry to the `EMOJIS` array in `index.html` with the next sequential `id`, and update the count in `<title>`, `<meta name="description">`, and `.header-subtitle`. Then re-stamp the script hash in the CSP (see above), or the whole page stops working.
