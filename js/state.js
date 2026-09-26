@@ -21,9 +21,16 @@ export const state = {
 
 // ── Derived data ─────────────────────────────────────────────────────
 
+// A Convex row is shown only when its fields are strings and its image URL
+// is https: the URL becomes a download link, where javascript: would run.
+function isUsableConvexEmoji(e) {
+  if (!e || typeof e.name !== 'string' || typeof e.category !== 'string' || typeof e.ext !== 'string') return false;
+  try { return new URL(e.url).protocol === 'https:'; } catch { return false; }
+}
+
 /** Merge hardcoded EMOJIS with dynamically loaded Convex emojis. */
 export function getAllEmojis() {
-  const mapped = state.convexEmojis.map((e, i) => ({
+  const mapped = state.convexEmojis.filter(isUsableConvexEmoji).map((e, i) => ({
     name: e.name,
     category: e.category,
     path: e.url,

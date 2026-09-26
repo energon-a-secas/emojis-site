@@ -39,7 +39,11 @@ function makeChip(value, label, count) {
   const c = document.createElement('button');
   c.className = 'chip' + (value === state.activeCategory ? ' active' : '');
   c.dataset.value = value;
-  c.innerHTML = `${label}<span class="chip-count">${count}</span>`;
+  // Categories can come from Convex, so the label is text, never markup.
+  const countEl = document.createElement('span');
+  countEl.className = 'chip-count';
+  countEl.textContent = count;
+  c.append(String(label), countEl);
   c.addEventListener('click', () => {
     document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
     c.classList.add('active');
@@ -75,16 +79,19 @@ function makeCard(e) {
   img.loading = 'lazy';
   if (e.isNew) img.crossOrigin = 'anonymous';
 
+  // Name and ext of an uploaded emoji are stored data: set as text, never parsed as HTML.
   const meta = document.createElement('div');
   meta.className = 'emoji-meta';
-  const newBadge = e.isNew ? '<span class="badge-new">new</span>' : '';
-  meta.innerHTML = `
-    <div class="emoji-name" title="${e.name}">${e.name}</div>
-    <div class="emoji-badges">
-      <span class="badge-ext">${e.ext}</span>
-      ${newBadge}
-      <span class="badge-id">#${String(e.id).padStart(4,'0')}</span>
-    </div>`;
+  const nameEl = document.createElement('div');
+  nameEl.className = 'emoji-name';
+  nameEl.title = e.name;
+  nameEl.textContent = e.name;
+  const badges = document.createElement('div');
+  badges.className = 'emoji-badges';
+  badges.append(makeBadge('badge-ext', e.ext));
+  if (e.isNew) badges.append(makeBadge('badge-new', 'new'));
+  badges.append(makeBadge('badge-id', `#${String(e.id).padStart(4,'0')}`));
+  meta.append(nameEl, badges);
 
   const overlay = document.createElement('div');
   overlay.className = 'emoji-overlay';
@@ -107,6 +114,13 @@ function makeCard(e) {
   card.appendChild(meta);
   card.appendChild(overlay);
   return card;
+}
+
+function makeBadge(className, text) {
+  const s = document.createElement('span');
+  s.className = className;
+  s.textContent = text;
+  return s;
 }
 
 // ── Grid rendering ───────────────────────────────────────────────────
