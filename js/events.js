@@ -38,11 +38,9 @@ const pwInput    = document.getElementById('pwInput');
 const pwSubmit   = document.getElementById('pwSubmit');
 const uploadZone = document.getElementById('uploadZone');
 
-// Check sessionStorage for existing auth
-if (sessionStorage.getItem('emoji-upload-auth') === 'true') {
-  pwGate.style.display = 'none';
-  uploadZone.style.display = 'block';
-}
+// The server checks this password on every upload, so it is kept in
+// memory for this page only; a reload asks for it again.
+let uploadPassword = '';
 
 pwSubmit.addEventListener('click', async () => {
   const pw = pwInput.value.trim();
@@ -52,7 +50,7 @@ pwSubmit.addEventListener('click', async () => {
   try {
     const ok = await convex.action(api.auth.checkPassword, { password: pw });
     if (ok) {
-      sessionStorage.setItem('emoji-upload-auth', 'true');
+      uploadPassword = pw;
       pwGate.style.display = 'none';
       uploadZone.style.display = 'block';
       showToast('Unlocked');
@@ -79,6 +77,11 @@ const emojiNameInput = document.getElementById('emojiNameInput');
 const emojiCatSelect = document.getElementById('emojiCatSelect');
 const uploadSubmit   = document.getElementById('uploadSubmit');
 
+// Same rules as saveEmoji in convex/emojis.ts, which is the check that counts.
+const UPLOAD_NAME = /^[A-Za-z0-9_+-]{1,64}$/;
+const UPLOAD_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+const UPLOAD_MAX_BYTES = 2 * 1024 * 1024;
+
 dropZone.addEventListener('click', () => fileInput.click());
 dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -93,14 +96,18 @@ fileInput.addEventListener('change', () => {
 });
 
 function handleFileSelect(file) {
-  if (!file.type.startsWith('image/')) {
-    showToast('Only image files allowed');
+  if (!UPLOAD_TYPES.includes(file.type)) {
+    showToast('Only PNG, JPEG, GIF or WebP images');
+    return;
+  }
+  if (file.size > UPLOAD_MAX_BYTES) {
+    showToast('Image is larger than 2 MB');
     return;
   }
   state.selectedFile = file;
   previewImg.src = URL.createObjectURL(file);
   // Auto-fill name from filename (strip extension)
-  const baseName = file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+  const baseName = file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9_-]/g, '_').slice(0, 64);
   emojiNameInput.value = baseName;
   uploadPreview.style.display = 'block';
   dropZone.textContent = file.name;
@@ -111,13 +118,14 @@ uploadSubmit.addEventListener('click', async () => {
   if (!state.selectedFile) { showToast('No file selected'); return; }
   const name = emojiNameInput.value.trim();
   if (!name) { showToast('Add a name first'); return; }
+  if (!UPLOAD_NAME.test(name)) { showToast('Name: 1 to 64 letters, digits, _ + or -'); return; }
 
   uploadSubmit.disabled = true;
   uploadSubmit.textContent = 'Uploading\u2026';
 
   try {
     // 1. Get upload URL from Convex
-    const uploadUrl = await convex.mutation(api.emojis.getUploadUrl);
+    const uploadUrl = await convex.mutation(api.emojis.getUploadUrl, { password: uploadPassword });
 
     // 2. Upload file to Convex storage
     const res = await fetch(uploadUrl, {
@@ -134,6 +142,7 @@ uploadSubmit.addEventListener('click', async () => {
       category: emojiCatSelect.value,
       ext,
       storageId,
+      password: uploadPassword,
     });
 
     showToast('Emoji uploaded!');
@@ -148,7 +157,8 @@ uploadSubmit.addEventListener('click', async () => {
     // Refresh gallery
     await loadConvexEmojis();
   } catch (e) {
-    showToast('Upload failed: ' + e.message);
+    // A ConvexError carries the server's reason in e.data.
+    showToast('Upload failed: ' + (typeof e.data === 'string' ? e.data : e.message));
   }
 
   uploadSubmit.disabled = false;

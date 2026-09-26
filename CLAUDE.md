@@ -26,10 +26,10 @@ Single-file app (`index.html`) with all CSS and JS embedded inline. No build ste
 
 **Convex backend** (`convex/`):
 - `schema.ts`: `emojis` table: `{ name, category, ext, storageId }`
-- `emojis.ts`: `list` query (returns URLs from storage), `getUploadUrl` + `saveEmoji` mutations
+- `emojis.ts`: `list` query (returns URLs from storage; skips rows whose fields hold HTML metacharacters), `getUploadUrl` + `saveEmoji` mutations. Both mutations require `UPLOAD_PASSWORD`; `saveEmoji` also checks the name charset and length, the category, the stored content type (PNG, JPEG, GIF, WebP) and size (2 MB), and caps the table at 1000 rows and 60 uploads an hour. The page repeats these checks only to show the reason early.
 - `auth.ts`: `checkPassword` action (reads `UPLOAD_PASSWORD` env var)
 
-**Upload flow:** password gate → `auth:checkPassword` action → sessionStorage flag → drag-and-drop file → `getUploadUrl` mutation → `fetch` POST to Convex storage → `saveEmoji` mutation → reload grid.
+**Upload flow:** password gate → `auth:checkPassword` action → password held in memory (a reload asks again) → drag-and-drop file → `getUploadUrl` mutation (with password) → `fetch` POST to Convex storage → `saveEmoji` mutation (with password) → reload grid.
 
 **Key JS functions in `index.html`:**
 - `getAllEmojis()`: merges hardcoded + Convex emojis
@@ -37,7 +37,7 @@ Single-file app (`index.html`) with all CSS and JS embedded inline. No build ste
 - `rebuildChips()`: builds category filter buttons from merged emoji set
 - `loadConvexEmojis()`: fetches from Convex, silently falls back if unconfigured
 - `copyEmoji()`: Canvas-based clipboard copy (GIFs unsupported, skips to toast)
-- `makeCard(e)`: builds emoji card DOM element with overlay buttons
+- `makeCard(e)`: builds emoji card DOM element with overlay buttons. Name, ext and category of uploaded emojis are public stored data: set them with `textContent`, never `innerHTML`.
 
 **Emoji categories:** `argentina`, `chile`, `development`, `essentials`, `logos`, `parrots`, `think`, `uncategorized`
 
